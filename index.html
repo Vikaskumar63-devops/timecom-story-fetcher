@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>           
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Time.com Stories | Vikas Kumar</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #f9fbff, #eef2f7);
+      margin: 0;
+      padding: 0;
+    }
+
+    .wrapper {
+      max-width: 720px;
+      margin: 60px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 26px;
+      color: #222;
+      text-align: center;
+    }
+
+    h1 span {
+      color: #004aad;
+    }
+
+    p {
+      text-align: center;
+      color: #444;
+      font-size: 14px;
+    }
+
+    button {
+      display: block;
+      margin: 20px auto;
+      background-color: #004aad;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00357a;
+      transform: scale(1.05);
+    }
+
+    ul {
+      list-style-type: "🗞️ ";
+      padding-left: 25px;
+    }
+
+    li {
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+
+    a {
+      text-decoration: none;
+      color: #222;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: #004aad;
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: #777;
+      margin-top: 25px;
+    }
+
+    footer span {
+      color: #004aad;
+      font-weight: bold;
+    }
+
+    #updateTime {
+      text-align: right;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h1>🕒 <span>Latest Time.com Stories</span></h1>
+    <p>Developed by <b>Vikas Kumar</b> | Tekmonks Internship Assignment</p>
+    <button onclick="loadStories()">Get Latest 6 Stories</button>
+    <ul id="storyList"></ul>
+    <p id="updateTime"></p>
+    <footer>
+      Made with ❤️ by <span>Vikas Kumar</span> | © 2025
+    </footer>
+  </div>
+
+  <script>
+    async function loadStories() {
+      const list = document.getElementById("storyList");
+      const timeLabel = document.getElementById("updateTime");
+      list.innerHTML = "<li>Loading latest stories...</li>";
+      timeLabel.innerText = "";
+
+      try {
+        const response = await fetch("/getTimeStories");
+        const data = await response.json();
+        list.innerHTML = "";
+
+        if (data.length === 0) {
+          list.innerHTML = "<li>No stories available at the moment.</li>";
+          return;
+        }
+
+        data.forEach((story) => {
+          const li = document.createElement("li");
+          li.classList.add("fade-in");
+          li.innerHTML = `<a href="${story.link}" target="_blank">${story.title}</a>`;
+          list.appendChild(li);
+        });
+
+        const now = new Date();
+        timeLabel.innerText = "Last updated: " + now.toLocaleString();
+      } catch (error) {
+        list.innerHTML = "<li>⚠️ Error fetching stories.</li>";
+      }
+    }
+  </script>
+</body>
+</html>
